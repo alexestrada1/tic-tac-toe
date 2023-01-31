@@ -5,4 +5,22 @@
 }
 .container div {
     border: 1px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+body{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.player1{
+    background: url('circle.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.player2{
+    background: url('X.webp');
+    background-repeat: no-repeat;
+    background-size: cover;
 }
