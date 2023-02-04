@@ -14,12 +14,12 @@ body{
     flex-direction: column;
     align-items: center;
 }
-.player1{
+.o{
     background: url('circle.png');
     background-repeat: no-repeat;
     background-size: cover;
 }
-.player2{
+.x{
     background: url('X.webp');
     background-repeat: no-repeat;
     background-size: cover;
