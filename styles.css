@@ -1,13 +1,22 @@
-.container{
+.gamegrid{
     display: grid;
     grid-template-columns: 200px 200px 200px;
     grid-template-rows: 200px 200px 200px;
 }
-.container div {
+.gamegrid div {
     border: 1px solid black;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+.container{
+    display: flex;
+    justify-content: space-around;
+}
+.player1, .player2{
+    height: 200px;
+    width: 200px;
+    text-align: center;
 }
 body{
     display: flex;

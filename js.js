@@ -1,4 +1,4 @@
-const container = document.getElementsByClassName("container");
+const container = document.getElementsByClassName("gamegrid");
 //Gets conainer div, uased to create board from js
 const Gameboard = (() => {
   let gameboard = [
@@ -24,6 +24,7 @@ const Gameboard = (() => {
       cell.classList.remove("o");
       cell.classList.remove("x");
     });
+    return false
   };
   const createGameBoard = () => {
     for (let i = 0; i < 9; i++) {
@@ -52,22 +53,20 @@ const Gameboard = (() => {
 })();
 
 function createPlayer(name) {
-  var values = [];
-  const setPlayerValues = (value) => {
-    values.push(value);
+  var playerWon = false;
+  const setPlayerWon = () => {
+    playerWon = true;
   };
-  const getPlayerValues = () => {
-    return values;
+  const getPlayerWon = () => {
+    return playerWon;
   };
   return {
     name: name,
-    getFullName() {
-      return name, values, setPlayerValues, getPlayerValues;
-    },
+    getPlayerWon,
+    setPlayerWon,
   };
 }
-function checkWinner(gameboard) {
-  
+function checkWinner(gameboard, player1, player2) {
   for (let i = 0; i < 3; i++) {
     var row = [];
     for (let j = 0; j < 3; j++) {
@@ -82,45 +81,53 @@ function checkWinner(gameboard) {
       col.every((field) => field == "x") ||
       row.every((field) => field == "x")
     ) {
-      console.log("match");
+      return true;
     }
   }
+  return false;
 }
 function playGame() {
-  resetButton.addEventListener("click", Gameboard.resetGameBoard);
   Gameboard.createGameBoard();
+  //const player1 = createPlayer(prompt("Enter player1 Name"));
+  //const player2 = createPlayer(prompt("Enter Player 2 name"));
   let turn = 1;
+  let gameOver = false;
+  resetButton.addEventListener("click", function(){
+    gameOver = Gameboard.resetGameBoard();
+  });
   const gameCells = document.querySelectorAll(".gameCell");
   gameCells.forEach((cell) => {
     cell.addEventListener("click", function () {
-      if (!cell.classList.contains("o") && !cell.classList.contains("x")) {
-        let row;
-        let cellNum = parseInt(cell.id);
-        let col = cellNum % 3; //the modular gets the column
-        if (cellNum <= 2) {
-          row = 0;
+      if (gameOver != true) {
+        if (!cell.classList.contains("o") && !cell.classList.contains("x")) {
+          let row;
+          let cellNum = parseInt(cell.id);
+          let col = cellNum % 3; //the modular gets the column
+          if (cellNum <= 2) {
+            row = 0;
+          }
+          if (cellNum <= 5 && cellNum > 2) {
+            row = 1;
+          }
+          if (cellNum <= 8 && cellNum > 5) {
+            row = 2;
+          }
+          if (turn % 2 == 0) {
+            cell.classList.add("x");
+            Gameboard.setGameboardVal(row, col, "x");
+          } else {
+            cell.classList.add("o");
+            Gameboard.setGameboardVal(row, col, "o");
+          }
+          turn++;
+
+          gameOver = checkWinner(Gameboard.getGameboard());
+          console.log(gameOver);
         }
-        if (cellNum <= 5 && cellNum > 2) {
-          row = 1;
-        }
-        if (cellNum <= 8 && cellNum > 5) {
-          row = 2;
-        }
-        if (turn % 2 == 0) {
-          cell.classList.add("x");
-          Gameboard.setGameboardVal(row, col, "x");
-        } else {
-          cell.classList.add("o");
-          Gameboard.setGameboardVal(row, col, "o");
-        }
-        turn++;
-        checkWinner(Gameboard.getGameboard())
       }
     });
   });
-  checkWinner(Gameboard.getGameboard())
 }
 const startButton = document.querySelector(".start");
 startButton.addEventListener("click", playGame);
 const resetButton = document.querySelector(".clear");
-
