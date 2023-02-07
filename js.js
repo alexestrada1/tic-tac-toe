@@ -24,7 +24,7 @@ const Gameboard = (() => {
       cell.classList.remove("o");
       cell.classList.remove("x");
     });
-    return false
+    return false;
   };
   const createGameBoard = () => {
     for (let i = 0; i < 9; i++) {
@@ -54,8 +54,8 @@ const Gameboard = (() => {
 
 function createPlayer(name) {
   var playerWon = false;
-  const setPlayerWon = () => {
-    playerWon = true;
+  const setPlayerWon = (won) => {
+    playerWon = won;
   };
   const getPlayerWon = () => {
     return playerWon;
@@ -77,10 +77,15 @@ function checkWinner(gameboard, player1, player2) {
     });
     if (
       col.every((field) => field == "o") ||
-      row.every((field) => field == "o") ||
+      row.every((field) => field == "o")
+    ) {
+      player1.setPlayerWon(true);
+      return true;
+    } else if (
       col.every((field) => field == "x") ||
       row.every((field) => field == "x")
     ) {
+      player2.setPlayerWon(true);
       return true;
     }
   }
@@ -88,12 +93,22 @@ function checkWinner(gameboard, player1, player2) {
 }
 function playGame() {
   Gameboard.createGameBoard();
-  //const player1 = createPlayer(prompt("Enter player1 Name"));
-  //const player2 = createPlayer(prompt("Enter Player 2 name"));
+  const player1 = createPlayer(prompt("Enter player1 Name"));
+  const player1Name = document.querySelector(".player1");
+  player1Name.textContent = player1.name + " Wins: ";
+
+  const player2 = createPlayer(prompt("Enter Player 2 name"));
+  const player2Name = document.querySelector(".player2");
+  player2Name.textContent = player2.name + " Wins: ";
+
   let turn = 1;
   let gameOver = false;
-  resetButton.addEventListener("click", function(){
+  resetButton.addEventListener("click", function () {
     gameOver = Gameboard.resetGameBoard();
+    displayWinner.textContent = "";
+    player1.setPlayerWon(false);
+    player2.setPlayerWon(false);
+    turn = 1;
   });
   const gameCells = document.querySelectorAll(".gameCell");
   gameCells.forEach((cell) => {
@@ -121,9 +136,16 @@ function playGame() {
           }
           turn++;
 
-          gameOver = checkWinner(Gameboard.getGameboard());
+          gameOver = checkWinner(Gameboard.getGameboard(), player1, player2);
           console.log(gameOver);
         }
+      }
+      if (player1.getPlayerWon() == true) {
+        displayWinner.textContent = player1.name + " wins!";
+      } else if (player2.getPlayerWon() == true) {
+        displayWinner.textContent = player2.name + " wins!";
+      } else if (turn > 9) {
+        displayWinner.textContent = "No one wins!";
       }
     });
   });
@@ -131,3 +153,4 @@ function playGame() {
 const startButton = document.querySelector(".start");
 startButton.addEventListener("click", playGame);
 const resetButton = document.querySelector(".clear");
+const displayWinner = document.querySelector(".display");
