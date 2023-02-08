@@ -53,6 +53,7 @@ const Gameboard = (() => {
 })();
 
 function createPlayer(name) {
+  var wins = 0;
   var playerWon = false;
   const setPlayerWon = (won) => {
     playerWon = won;
@@ -60,8 +61,16 @@ function createPlayer(name) {
   const getPlayerWon = () => {
     return playerWon;
   };
+  const getWins = () => {
+    return wins;
+  };
+  const addWin = () => {
+    wins += 1;
+  };
   return {
     name: name,
+    addWin,
+    getWins,
     getPlayerWon,
     setPlayerWon,
   };
@@ -85,6 +94,7 @@ function checkWinner(gameboard, player1, player2) {
       diagonal2.every((field) => field == "o")
     ) {
       player1.setPlayerWon(true);
+      player1.addWin();
       return true;
     } else if (
       col.every((field) => field == "x") ||
@@ -93,6 +103,7 @@ function checkWinner(gameboard, player1, player2) {
       diagonal2.every((field) => field == "x")
     ) {
       player2.setPlayerWon(true);
+      player2.addWin();
       return true;
     }
   }
@@ -103,10 +114,12 @@ function playGame() {
   const player1 = createPlayer(prompt("Enter player1 Name"));
   const player1Name = document.querySelector(".player1");
   player1Name.textContent = player1.name + " Wins: ";
+  const player1Wins = document.querySelector(".player1-wins");
 
   const player2 = createPlayer(prompt("Enter Player 2 name"));
   const player2Name = document.querySelector(".player2");
   player2Name.textContent = player2.name + " Wins: ";
+  const player2Wins = document.querySelector(".player2-wins");
 
   let turn = 1;
   let gameOver = false;
@@ -149,8 +162,10 @@ function playGame() {
       }
       if (player1.getPlayerWon() == true) {
         displayWinner.textContent = player1.name + " wins!";
+        player1Wins.textContent = player1.getWins();
       } else if (player2.getPlayerWon() == true) {
         displayWinner.textContent = player2.name + " wins!";
+        player2Wins.textContent = player2.getWins();
       } else if (turn > 9) {
         displayWinner.textContent = "No one wins!";
       }
