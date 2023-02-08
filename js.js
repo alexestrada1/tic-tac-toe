@@ -75,15 +75,22 @@ function checkWinner(gameboard, player1, player2) {
     var col = gameboard.map(function (value) {
       return value[i];
     });
+    var diagonal1 = [gameboard[0][0], gameboard[1][1], gameboard[2][2]];
+    var diagonal2 = [gameboard[2][0], gameboard[1][1], gameboard[0][2]];
+
     if (
       col.every((field) => field == "o") ||
-      row.every((field) => field == "o")
+      row.every((field) => field == "o") ||
+      diagonal1.every((field) => field == "o") ||
+      diagonal2.every((field) => field == "o")
     ) {
       player1.setPlayerWon(true);
       return true;
     } else if (
       col.every((field) => field == "x") ||
-      row.every((field) => field == "x")
+      row.every((field) => field == "x") ||
+      diagonal1.every((field) => field == "x") ||
+      diagonal2.every((field) => field == "x")
     ) {
       player2.setPlayerWon(true);
       return true;
